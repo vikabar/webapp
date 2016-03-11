@@ -98,12 +98,14 @@ html
 {
     box-sizing: border-box;
     height: 100%;
+    width: 100%;
     font-family: 'Open Sans', sans-serif;
 }
 
 body
 {
     height: 100%;
+    width: 100%;
     margin: 0;
     background-image: url('../img/body-background.jpg');
     background-position: center;
@@ -112,24 +114,44 @@ body
     background-attachment: fixed;
 }
 
+ol, ul 
+{
+    list-style-type: none;
+    margin: 0;
+}
+
+a, a:active
+{
+    text-decoration: none;
+}
+
 header
 {
     background-color: black;
     width: 100%;
-    padding: 10px;
+    left: 0;
+    right: 0;
     display: block;
-    padding-right: 20px;
+    height: 50px;
+}
 
+header .layout-wrap
+{
+    vertical-align: middle;
+    padding-top: 9px;
 }
 
 header .layout-wrap > *
 {
-    vertical-align: center;
+    vertical-align: middle;
     display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .search-box
 {
+    top: 4px;
     position: relative;
     float: right;
 }
@@ -145,6 +167,7 @@ header .layout-wrap > *
     margin-left: auto;
     margin-right: auto;
     top: 10px;
+    padding: 3px;
 }
 
 .page-body
@@ -153,6 +176,14 @@ header .layout-wrap > *
     width: 80%;
     margin-right: auto;
     margin-left: auto;
+    text-align: center;
+    height: 100%;
+}
+
+nav 
+{
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 
 .nav-section
@@ -162,14 +193,34 @@ header .layout-wrap > *
     vertical-align: top;
     top: 20px;
     width: 30%;
+    height: 170px;
     background-repeat: no-repeat;
     margin-right: 1%;
     margin-left: 1%;
     background-color: black;
     color: white;
     cursor: pointer;
+    background-position: center 70px;
+    text-align: center;
 }
 
+.nav-section:hover
+{
+    background-color: rgb(30, 30, 30);
+}
+
+.nav-section:hover .action-list
+{
+    opacity: 1;
+    height: auto;
+    transition: all 0.25s ease-in;
+}
+
+.nav-section > p
+{
+    font-size: 20px;
+    margin-bottom: 0;
+}
 .nav-section:first-of-type
 {
     background-image: url('../img/icons/action-report-new.png');
@@ -187,23 +238,153 @@ header .layout-wrap > *
     margin-right: 2.45%;
 }
 
+.menu
+{
+    position: relative;
+    top: 80px;
+}
 
+.menu-caption p 
+{
+    background-color: rgb(230, 230, 230);
+    color: black;
+    text-align: left;
+    padding: 10px 10px 10px 15px;
+    margin: 0;
+}
 
+.menu-caption p:after
+{
+    position: relative;
+    content: url('../img/icons/down-arrow.png');
+    float: right;
+    top: 5px;
+}
 
+.action-list
+{
+    position: relative;
+    padding: 0;
+    opacity: 0;
+    z-index: 5;
+    overflow: hidden;
+    height: 0;
+    border: 1px solid rgb(180, 180, 180);
+}
 
+.action-list li
+{
+    background-color: rgb(230, 230, 230);
+    text-align: left;
+    padding: 5px 10px 5px 15px;
+}
 
+.action-list li:hover
+{
+    background-color: rgb(200, 200, 200);
+}
 
+.action-list a .action-list a:active, .action-list a:focus, .action-list a:visited
+{
+    color: black;
+}
 
+.nav-section:hover .menu-caption p:after
+{
+    content: url('../img/icons/up-arrow.png');
+}
 
+.tabs 
+{
+    position: relative;
+    height: 100%;
+}
 
+.tabs a 
+{
+    color: white;
+    width: 100%;
+    display: block;
+}
 
+.tabs > ul 
+{
+    padding: 0;
+    margin-bottom: 0;
+    height: 45px;
+}
 
+.tabs > ul > li 
+{
+    float: left;
+    background-color: rgb(90, 90, 90);
+    margin-right: 2%;
+    width: 23.5%;
+    line-height: 45px;
+    border-radius: 5px 5px 0px 0px;
+}
 
+.tabs > ul > li:nth-of-type(4)
+{
+    margin-right: 0;
+}
 
+.tabs > ul > li:hover
+{
+    background-color: rgb(70, 70, 70);
+}
 
+.curr-tab, .curr-tab a:focus, .curr-tab a:active
+{
+    background-color: rgb(230, 230, 230) !important;
+    border-radius: 5px 5px 0px 0px;
+}
 
+.curr-tab a
+{
+    color: black;
+}
 
+.tabs > div
+{
+    position: relative;
+    height: 100%;
+    padding-top: 40px;
+    padding-bottom: 15px;
+    background-color: rgb(230, 230, 230);
+}
 
+.settings-toggle
+{
+    content: url('../img/icons/settings.png');
+    cursor: pointer;
+    float: right;
+}
+
+.expand-arrow
+{
+    content: url('../img/icons/expand.png');
+    cursor: pointer;
+    float: right;
+}
+
+.saved-links
+{
+    float: left;
+    width: 170px;
+    line-height: 40px;
+    font-size: 20px;
+}
+
+.tabs iframe 
+{
+    display: block;
+    position: relative;
+    width: 95%;
+    height: 95%;
+    margin-right: auto;
+    margin-left: auto;
+}
 
 
 
