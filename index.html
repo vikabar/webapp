@@ -10,10 +10,8 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
 
-        <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     </head>
     <body>
   
@@ -83,13 +81,13 @@
 
 		<section class="tabs">
 			<ul>
-				<li><a href="#quick-reports">Quick Reports</a></li>
-				<li class="curr-tab"><a href="#my-folders">My Folders</a></li>
-				<li><a href="#my-team-folders">My Team Folders</a></li>
-				<li><a href="#public-folders">Public Folders</a></li>
+				<li id="quick-reports-btn" class="curr-tab"><a href="#quick-reports">Quick Reports</a></li>
+				<li id="my-folders-btn"><a href="#my-folders">My Folders</a></li>
+				<li id="my-team-folders-btn"><a href="#my-team-folders">My Team Folders</a></li>
+				<li id="public-folders-btn"><a href="#public-folders">Public Folders</a></li>
 			</ul>
 
-			<div id="quick-reports">
+			<div id="quick-reports-body">
 				<select class="saved-links">
 				</select>
 				<span class="settings-toggle"></span>
@@ -126,13 +124,16 @@
 				<iframe></iframe>
 			</div>
 
-			<div id="my-folders" class="hidden">
+			<div id="my-folders-body" class="hidden">
+				bla2
 			</div>
 
-			<div id="my-team-folders" class="hidden">
+			<div id="my-team-folders-body" class="hidden">
+				bla3
 			</div>
 
-			<div id="public-folders" class="hidden">
+			<div id="public-folders-body" class="hidden">
+				bla4
 			</div>
 		</section>
 	</section>

@@ -416,7 +416,7 @@ form label
 
 form label:first-of-type
 {
-    text-shadow: 1px 1px grey;
+    text-shadow: 0.5px 0.5px grey;
     margin-right: 30px;
 }
 
