@@ -387,6 +387,66 @@ nav
 }
 
 
+.settings-panel
+{
+    position: absolute;
+    width: 93%;
+    z-index: 3;
+    background-color: white;
+    margin-left: 3.5%;
+    margin-top: 30px;
+}
+
+.settings-panel fieldset
+{
+    position: relative;
+    width: 95%;
+    text-align: left;
+    background-color: rgb(230, 230, 230);
+    padding: 8px 0 8px 20px;
+    margin: 8px auto 5px auto;
+    border-radius: 3px;
+}
+
+form label
+{
+    font-weight: 800;
+    margin-right: 4px;
+}
+
+form label:first-of-type
+{
+    text-shadow: 1px 1px grey;
+    margin-right: 30px;
+}
+
+.settings-panel input
+{
+    font-size: 16px;
+    padding-left: 3px;
+    margin-right: 10px;
+    width: 30%;
+}
+
+fieldset .btn 
+{
+    vertical-align: top;
+    box-sizing: border-box;
+    background-color: black;
+    color: white;
+    height: 30px;
+    width: 100px;
+    border: none;
+    padding: 3px;
+    font-size: 14px;
+    text-align: center;
+    display: inline-block;
+    float: right;
+    border-radius: 3px;
+    margin-right: 30px;
+}
+
+
 
 /* ==========================================================================
    Helper classes
