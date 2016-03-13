@@ -39,6 +39,20 @@ window.onload = function()
 			panel.classList.add("hidden");
 		}
 	}
+
+	UTILS.qs("#rep-cancel").onclick = function()
+	{
+		UTILS.qs("#quick-reports-body .settings-panel").classList.add("hidden");
+		return false;
+	}
+
+	UTILS.qs("#fol-cancel").onclick = function()
+	{
+		UTILS.qs("#my-team-folders-body .settings-panel").classList.add("hidden");
+		return false;
+	}
+
+	//UTILS.qs("#rep-save").onclick = saveQuickReports;
 }
 
 function keyListener(ev)
@@ -83,6 +97,37 @@ function selectTab()
 	UTILS.qs("#" + selectedTabButton).classList.add("curr-tab");
 	UTILS.qs("#" + selectedTabBody).classList.remove("hidden");
 }
+
+/*function saveQuickReports()
+{
+	var reports = [];
+
+	//collect data from quick reports form
+	for (var i = 1; i <= 3; i++)
+	{
+		var repName = UTILS.qs("#rep_0" + i + "_name").value;
+
+		//check if the row is empty
+		if (repName != "")
+		{
+			//collect report row
+			var repURL = UTILS.qs("#rep_0" + i + "_URL").value;
+			var report = {value:repURL, text:repName};
+			reports.push(report);
+		}
+	}
+
+	var combo = UTILS.qs("#quick-reports-body .saved-links");
+
+	//put values into the combobox
+	for (var i = 0; i < reports.length; i++)
+	{
+		combo.appendChild(reports(i));
+	}
+
+	return false;
+	
+}*/
 
 
 var doneFunction =  function(res)
