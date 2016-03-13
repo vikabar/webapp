@@ -3,6 +3,22 @@ window.onload = function()
 	document.location.hash = "#quick-reports";
 	UTILS.addEvent(window,"hashchange",selectTab);
 	readNotificationFromFile();
+	document.onkeydown = keyListener;
+}
+
+function keyListener(ev)
+{
+	var key = ev.keyCode;
+	var tabsNames = ["quick-reports", "my-folders", "my-team-folders", "public-folders"];
+
+	var currTab = tabsNames.indexOf(document.location.hash.substring(1));
+	var tabDiff = 38 - key;
+	var newTab = currTab - tabDiff;
+
+	if ((newTab <= 3) && (newTab >= 0))
+	{
+		document.location.hash = "#" + tabsNames[newTab];
+	}
 }
 
 function unselectCurrTab() 
@@ -33,9 +49,16 @@ function selectTab()
 	UTILS.qs("#" + selectedTabBody).classList.remove("hidden");
 }
 
+
 var doneFunction =  function(res)
 {
-	alert("Hello world!");
+	if (res.notification)
+	{
+		var notif = UTILS.qs(".notifications");
+		notif.innerHTML = res.notification;
+		notif.classList.remove("hidden");
+	}
+	
 };
 
 function readNotificationFromFile()

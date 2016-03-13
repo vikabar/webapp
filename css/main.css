@@ -163,11 +163,11 @@ header .layout-wrap > *
     position: relative;
     background-color: rgb(230, 230, 230);
     text-align: left;
-    width: 98%;
+    width: 94%;
     margin-left: auto;
     margin-right: auto;
     top: 10px;
-    padding: 3px;
+    padding: 4px;
 }
 
 .page-body
@@ -408,15 +408,19 @@ nav
     border-radius: 3px;
 }
 
+.settings-panel fieldset:nth-of-type(4)
+{
+    background-color: white;
+}
+
 form label
 {
-    font-weight: 800;
+    font-weight: 600;
     margin-right: 4px;
 }
 
 form label:first-of-type
 {
-    text-shadow: 0.5px 0.5px grey;
     margin-right: 30px;
 }
 
@@ -435,7 +439,7 @@ fieldset .btn
     background-color: black;
     color: white;
     height: 30px;
-    width: 100px;
+    width: 90px;
     border: none;
     padding: 3px;
     font-size: 14px;
@@ -443,7 +447,12 @@ fieldset .btn
     display: inline-block;
     float: right;
     border-radius: 3px;
-    margin-right: 30px;
+}
+
+fieldset button
+{
+    margin-right: 20px;
+    cursor: pointer;
 }
 
 
