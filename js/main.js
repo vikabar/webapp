@@ -4,6 +4,41 @@ window.onload = function()
 	UTILS.addEvent(window,"hashchange",selectTab);
 	readNotificationFromFile();
 	document.onkeydown = keyListener;
+
+	//toggle visibility of settins panel when the wheel btn is pressed (quick-reports) 
+	UTILS.qs("#quick-reports-body .settings-toggle").onclick = function()
+	{
+		var panel = UTILS.qs("#quick-reports-body .settings-panel");
+		//check current visibility state
+		var isHidden = panel.classList.contains("hidden");
+		//toggle state
+		if (isHidden)
+		{
+			panel.classList.remove("hidden");
+		}
+		else
+		{
+			panel.classList.add("hidden");
+		}
+	}
+
+	//toggle visibility of settins panel when the wheel btn is pressed (my-team-folders) 
+	UTILS.qs("#my-team-folders-body .settings-toggle").onclick = function()
+	{
+		var panel = UTILS.qs("#my-team-folders-body .settings-panel");
+
+		//check current visibility state
+		var isHidden = panel.classList.contains("hidden");
+		//toggle state
+		if (isHidden)
+		{
+			panel.classList.remove("hidden");
+		}
+		else
+		{
+			panel.classList.add("hidden");
+		}
+	}
 }
 
 function keyListener(ev)

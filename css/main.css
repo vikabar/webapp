@@ -135,6 +135,12 @@ header
     height: 50px;
 }
 
+iframe
+{
+    background-color: white;
+    clear: both;
+}
+
 header .layout-wrap
 {
     vertical-align: middle;
@@ -300,7 +306,7 @@ nav
     height: 100%;
 }
 
-.tabs a 
+.tabs > ul a 
 {
     color: white;
     width: 100%;
@@ -329,7 +335,7 @@ nav
     margin-right: 0;
 }
 
-.tabs > ul > li:hover
+.tabs > ul > li:hover, .tabs > ul > li a:focus
 {
     background-color: rgb(70, 70, 70);
 }
@@ -342,7 +348,7 @@ nav
 
 .curr-tab a
 {
-    color: black;
+    color: black !important;
 }
 
 .tabs > div
@@ -354,11 +360,19 @@ nav
     background-color: rgb(230, 230, 230);
 }
 
+.right-icon
+{
+    position: relative;
+    margin-right: 2.5%;
+}
+
 .settings-toggle
 {
     content: url('../img/icons/settings.png');
     cursor: pointer;
     float: right;
+    padding: 4px;
+    border: 1px black solid;
 }
 
 .expand-arrow
@@ -366,6 +380,13 @@ nav
     content: url('../img/icons/expand.png');
     cursor: pointer;
     float: right;
+    padding: 8px;
+    border: 1px black solid;
+}
+
+.settings-toggle:hover, .expand-arrow:hover
+{
+    background-color: white;
 }
 
 .saved-links
