@@ -1,3 +1,6 @@
+var reports = [];
+var folders = [];
+
 window.onload = function()
 {
 	document.location.hash = "#quick-reports";
@@ -81,10 +84,12 @@ window.onload = function()
 				if (!otherField.hasAttribute('required'))
 				{
 					otherField.setAttribute('required', 'true');
-				}			
+				}
 			}
 		};
 	}
+
+	readLocalSt();
 }
 
 
@@ -140,6 +145,8 @@ function selectTab()
 	//make selected tab active and display its body
 	UTILS.qs("#" + selectedTabButton).classList.add("curr-tab");
 	UTILS.qs("#" + selectedTabBody).classList.remove("hidden");
+
+	writeToLocalSt();
 }
 
 
@@ -150,7 +157,7 @@ function saveQuickReports()
 		//hide panel
 		UTILS.qs("#quick-reports-body .settings-panel").classList.add("hidden");
 
-		var reports = [];
+		reports = [];
 
 		//collect data from quick reports form
 		for (var i = 1; i <= 3; i++)
@@ -167,6 +174,8 @@ function saveQuickReports()
 			}
 		}
 
+		writeToLocalSt();
+
 		var combo = UTILS.qs("#quick-reports-body .saved-links");
 
 		//remove all current options from combobox
@@ -175,14 +184,7 @@ function saveQuickReports()
 		    combo.removeChild(combo.firstChild);
 		}
 
-		//put new values into the combobox
-		for (var i = 0; i < reports.length; i++)
-		{
-			var optionElement = document.createElement("option");
-			optionElement.setAttribute("value", reports[i].value);
-			optionElement.innerHTML = reports[i].text;
-			combo.appendChild(optionElement);
-		}
+		fillSavedLinksCombo(combo, reports);
 
 		return false;
 	}
@@ -231,5 +233,78 @@ function validateForm(tab)
 	}
 
 	return false;
+}
+
+
+function fillSavedLinksCombo(combo, values)
+{
+	//put new values into the combobox
+	for (var i = 0; i < values.length; i++)
+	{
+		var optionElement = document.createElement("option");
+		optionElement.setAttribute("value", values[i].value);
+		optionElement.innerHTML = values[i].text;
+		combo.appendChild(optionElement);
+	}
+}
+
+function fillSettingsPanel(panelName, values)
+{
+	var inputPrefix = (panelName == "quickReports") ? "rep_0" : "fol_0";
+
+	for (var i = 0; i < values.length; i++)
+	{
+		var nameField = UTILS.qs("#" + inputPrefix + (i+1) + "_name");
+		var urlField = UTILS.qs("#" + inputPrefix + (i+1) + "_URL");
+
+		nameField.value = values[i].text;
+		urlField.value = values[i].value;
+
+		//make the inputs required
+		if (!nameField.hasAttribute('required'))
+		{
+			nameField.setAttribute('required', 'true');
+		}
+		
+		if (!urlField.hasAttribute('required'))
+		{
+			urlField.setAttribute('required', 'true');
+		}
+	}
+}
+
+
+function writeToLocalSt()
+{
+	var reportsStr = JSON.stringify(reports);
+	var foldersStr = JSON.stringify(folders);
+	var lastTab = document.location.hash;
+
+	localStorage.setItem("reports", reportsStr);
+	localStorage.setItem("folders", foldersStr);
+	localStorage.setItem("tab", lastTab);
+}
+
+
+function readLocalSt()
+{
+	//load saved links
+	reports = JSON.parse(localStorage.getItem("reports"));
+	folders = JSON.parse(localStorage.getItem("folders"));
+
+	//if there was a previous tab - switch to it
+	var lastTab = localStorage.getItem("tab");
+	if (lastTab)
+	{
+		document.location.hash = lastTab;
+	}
+
+	//fill both saved links combos
+	fillSavedLinksCombo(UTILS.qs("#quick-reports-body .saved-links"), reports);
+	fillSavedLinksCombo(UTILS.qs("#my-team-folders-body .saved-links"), folders);
+
+	//fill both settings panel forms
+	fillSettingsPanel("quickReports", reports);
+	fillSettingsPanel("myTeamFolders", folders);
 }
 
