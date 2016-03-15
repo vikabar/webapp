@@ -476,6 +476,18 @@ fieldset button
     cursor: pointer;
 }
 
+.input-error
+{
+    /*background-color: red;
+    color: white;*/
+    border: solid red 1px;
+}
+
+.input-error:focus
+{
+    outline: 0;
+}
+
 
 
 /* ==========================================================================
