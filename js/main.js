@@ -6,6 +6,7 @@ window.onload = function()
 	document.location.hash = "#quick-reports";
 	UTILS.addEvent(window,"hashchange",selectTab);
 	readNotificationFromFile();
+	readLocalSt();
 	document.onkeydown = keyListener;
 
 	//toggle visibility of settins panel when the wheel btn is pressed (quick-reports) 
@@ -55,7 +56,17 @@ window.onload = function()
 		return false;
 	}
 
-	UTILS.qs("#rep-save").onclick = saveQuickReports;
+	UTILS.qs("#rep-save").onclick = function()
+	{
+		saveLinks("quick-reports-body");
+		return false;
+	}
+
+	UTILS.qs("#fol-save").onclick = function()
+	{
+		saveLinks("my-team-folders-body");
+		return false;
+	}
 
 	//define required dependencies between pairs of form inputs
 	var inputs = UTILS.qsa(".settings-panel input");
@@ -89,7 +100,18 @@ window.onload = function()
 		};
 	}
 
-	readLocalSt();
+	//define combobox change event behaviour for both tabs
+	var quickReportsCombo = UTILS.qs("#quick-reports-body .saved-links");
+	var teamFoldersCombo = UTILS.qs("#my-team-folders-body .saved-links");
+	quickReportsCombo.onchange = function(){ displaySavedSite("quick-reports-body", quickReportsCombo.value); };
+	teamFoldersCombo.onchange = function(){ displaySavedSite("my-team-folders-body", teamFoldersCombo.value); };
+}
+
+
+function displaySavedSite(tabBodyName, link)
+{
+	UTILS.qs("#" + tabBodyName + " iframe").setAttribute("src", link);
+    UTILS.qs("#" + tabBodyName + " > a").setAttribute("href", link);
 }
 
 
@@ -150,33 +172,55 @@ function selectTab()
 }
 
 
-function saveQuickReports()
+function saveLinks(tabBodyName)
 {
-	if (validateForm("quick-reports-body"))
+	if (validateForm(tabBodyName))
 	{
 		//hide panel
-		UTILS.qs("#quick-reports-body .settings-panel").classList.add("hidden");
+		UTILS.qs("#" + tabBodyName + " .settings-panel").classList.add("hidden");
 
-		reports = [];
+		//empty corresponding saved links
+		if (tabBodyName == "quick-reports-body")
+		{
+			reports = [];	
+		}
+		else
+		{
+			folders = [];
+		}
 
-		//collect data from quick reports form
+		var inputPrefix = (tabBodyName == "quick-reports-body") ? "rep_0" : "fol_0";
+		var numOfEntries = 0;
+
+		//collect data from the form
 		for (var i = 1; i <= 3; i++)
 		{
-			var repName = UTILS.qs("#rep_0" + i + "_name").value;
+			var entryName = UTILS.qs("#" + inputPrefix + i + "_name").value;
 
 			//check if the row is empty
-			if (repName != "")
+			if (entryName != "")
 			{
-				//collect report row
-				var repURL = UTILS.qs("#rep_0" + i + "_URL").value;
-				var report = {value: repURL, text: repName};
-				reports.push(report);
+				//collect row information
+				var entryURL = UTILS.qs("#" + inputPrefix + i + "_URL").value;
+				var entry = {value: entryURL, text: entryName};
+
+				//push the new entry into the corresponding array
+				if (tabBodyName == "quick-reports-body")
+				{
+					reports.push(entry);
+				}
+				else
+				{
+					folders.push(entry);
+				}
+
+				numOfEntries++;				
 			}
 		}
 
 		writeToLocalSt();
 
-		var combo = UTILS.qs("#quick-reports-body .saved-links");
+		var combo = UTILS.qs("#" + tabBodyName + " .saved-links");
 
 		//remove all current options from combobox
 		while (combo.firstChild)
@@ -184,8 +228,20 @@ function saveQuickReports()
 		    combo.removeChild(combo.firstChild);
 		}
 
-		fillSavedLinksCombo(combo, reports);
+		//fill the corresponding combobox
+		if (tabBodyName == "quick-reports-body")
+		{
+			fillSavedLinksCombo(combo, reports);
+		}
+		else
+		{
+			fillSavedLinksCombo(combo, folders);
+		}
 
+		//select the last option in the combobox
+		combo.selectedIndex = (numOfEntries - 1); 
+		combo.onchange();
+		
 		return false;
 	}
 }
@@ -265,7 +321,7 @@ function fillSettingsPanel(panelName, values)
 		{
 			nameField.setAttribute('required', 'true');
 		}
-		
+
 		if (!urlField.hasAttribute('required'))
 		{
 			urlField.setAttribute('required', 'true');
@@ -300,11 +356,35 @@ function readLocalSt()
 	}
 
 	//fill both saved links combos
-	fillSavedLinksCombo(UTILS.qs("#quick-reports-body .saved-links"), reports);
-	fillSavedLinksCombo(UTILS.qs("#my-team-folders-body .saved-links"), folders);
+	var quickReportsCombo = UTILS.qs("#quick-reports-body .saved-links");
+	var teamFoldersCombo = UTILS.qs("#my-team-folders-body .saved-links");
+	fillSavedLinksCombo(quickReportsCombo, reports);
+	fillSavedLinksCombo(teamFoldersCombo, folders);
 
 	//fill both settings panel forms
 	fillSettingsPanel("quickReports", reports);
 	fillSettingsPanel("myTeamFolders", folders);
+
+	//check whether there are saved links in the quick reports tab
+	if (reports.length)
+	{		
+		//select the last option in the combobox and display site
+		quickReportsCombo.selectedIndex = (reports.length - 1);
+		displaySavedSite("quick-reports-body", quickReportsCombo.value);
+
+		//hide settings panel
+		UTILS.qs("#quick-reports-body .settings-panel").classList.add("hidden");
+	}
+
+	//check whether there are saved links in the team folders tab
+	if (folders.length)
+	{		
+		//select the last option in the combobox and display site
+		teamFoldersCombo.selectedIndex = (folders.length - 1);
+		displaySavedSite("my-team-folders-body", teamFoldersCombo.value);
+
+		//hide settings panel
+		UTILS.qs("#my-team-folders-body .settings-panel").classList.add("hidden");
+	}
 }
 
