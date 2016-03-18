@@ -408,6 +408,10 @@ function readLocalSt()
 {
 	//load saved data
 	var savedData = localStorage.getItem("savedData");
+	if (!savedData)
+	{
+		return;
+	}
 	var savedDataSplit = savedData.split("^");
 
 	if (savedDataSplit[0] != "")
