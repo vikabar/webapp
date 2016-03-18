@@ -197,6 +197,35 @@ function selectTab()
 
 function saveLinks(tabBodyName)
 {
+	var inputPrefix = (tabBodyName == "quick-reports-body") ? "rep_0" : "fol_0";
+
+	for (var i = 1; i <= 3; i++)
+	{
+		var URLInput = UTILS.qs("#" + inputPrefix + i + "_URL");
+
+		//add protocol before the URL
+		if ((URLInput.value != "") && (!URLInput.value.startsWith("http")))
+		{
+			URLInput.value = "http://" + URLInput.value;
+		}
+
+		//if URL exists and not valid
+		if ((URLInput.value != "") && (!isUrlValid(URLInput.value)))
+		{
+			URLInput.classList.add("input-error");
+			URLInput.setCustomValidity("The URL is not valid");
+		}
+		else
+		{
+			URLInput.setCustomValidity("");
+			if ((URLInput.value != "") || (!URLInput.hasAttribute("required")))
+			{
+				URLInput.classList.remove("input-error");
+			}
+		}
+	}
+
+
 	if (validateForm(tabBodyName))
 	{
 		//hide panel
@@ -212,7 +241,7 @@ function saveLinks(tabBodyName)
 			folders = [];
 		}
 
-		var inputPrefix = (tabBodyName == "quick-reports-body") ? "rep_0" : "fol_0";
+		
 		var numOfEntries = 0;
 
 		//collect data from the form
@@ -351,14 +380,14 @@ function fillSettingsPanel(panelName, values)
 		urlField.value = values[i].value;
 
 		//make the inputs required
-		if (!nameField.hasAttribute('required'))
+		if (!nameField.hasAttribute("required"))
 		{
-			nameField.setAttribute('required', 'true');
+			nameField.setAttribute("required", "true");
 		}
 
-		if (!urlField.hasAttribute('required'))
+		if (!urlField.hasAttribute("required"))
 		{
-			urlField.setAttribute('required', 'true');
+			urlField.setAttribute("required", "true");
 		}
 	}
 }
@@ -370,22 +399,30 @@ function writeToLocalSt()
 	var foldersStr = JSON.stringify(folders);
 	var lastTab = document.location.hash;
 
-	localStorage.setItem("reports", reportsStr);
-	localStorage.setItem("folders", foldersStr);
-	localStorage.setItem("tab", lastTab);
+	var savedData = reportsStr + "^" + foldersStr + "^" + lastTab;
+	localStorage.setItem("savedData", savedData);
 }
 
 
 function readLocalSt()
 {
-	//load saved links
-	reports = JSON.parse(localStorage.getItem("reports"));
-	folders = JSON.parse(localStorage.getItem("folders"));
+	//load saved data
+	var savedData = localStorage.getItem("savedData");
+	var savedDataSplit = savedData.split("^");
 
-	//if there was a previous tab - switch to it
-	var lastTab = localStorage.getItem("tab");
-	if (lastTab)
+	if (savedDataSplit[0] != "")
 	{
+		reports = JSON.parse(savedDataSplit[0]);
+	}
+	if (savedDataSplit[1] != "")
+	{
+		folders = JSON.parse(savedDataSplit[1]);
+	}
+	if (savedDataSplit[2] != "")
+	{
+		var lastTab = savedDataSplit[2];
+	
+		//if there was a previous tab - switch to it
 		document.location.hash = lastTab;
 	}
 
@@ -405,6 +442,11 @@ function readLocalSt()
 
 		//hide settings panel
 		UTILS.qs("#quick-reports-body .settings-panel").classList.add("hidden");
+
+		//show combo and iframe
+		quickReportsCombo.classList.remove("hidden");
+		UTILS.qs("#quick-reports-body iframe").classList.remove("hidden");
+
 	}
 
 	//check whether there are saved links in the team folders tab
@@ -423,6 +465,16 @@ function readLocalSt()
 
 		//hide settings panel
 		UTILS.qs("#my-team-folders-body .settings-panel").classList.add("hidden");
+
+		//show combo and iframe
+		teamFoldersCombo.classList.remove("hidden");
+		UTILS.qs("#my-team-folders-body iframe").classList.remove("hidden");
 	}
 }
+
+function isUrlValid(url) 
+{
+    return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+}
+
 
