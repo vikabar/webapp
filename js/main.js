@@ -355,19 +355,16 @@ function readLocalSt()
 		document.location.hash = lastTab;
 	}
 
-	//fill both saved links combos
-	var quickReportsCombo = UTILS.qs("#quick-reports-body .saved-links");
-	var teamFoldersCombo = UTILS.qs("#my-team-folders-body .saved-links");
-	fillSavedLinksCombo(quickReportsCombo, reports);
-	fillSavedLinksCombo(teamFoldersCombo, folders);
-
-	//fill both settings panel forms
-	fillSettingsPanel("quickReports", reports);
-	fillSettingsPanel("myTeamFolders", folders);
-
 	//check whether there are saved links in the quick reports tab
-	if (reports.length)
+	if ((reports) && (reports.length))
 	{		
+		//fill quick reports saved links combo
+		var quickReportsCombo = UTILS.qs("#quick-reports-body .saved-links");
+		fillSavedLinksCombo(quickReportsCombo, reports);
+
+		//fill quick reports settings panel form
+		fillSettingsPanel("quickReports", reports);
+
 		//select the last option in the combobox and display site
 		quickReportsCombo.selectedIndex = (reports.length - 1);
 		displaySavedSite("quick-reports-body", quickReportsCombo.value);
@@ -377,8 +374,15 @@ function readLocalSt()
 	}
 
 	//check whether there are saved links in the team folders tab
-	if (folders.length)
+	if ((folders) && (folders.length))
 	{		
+		//fill team folders saved links combo
+		var teamFoldersCombo = UTILS.qs("#my-team-folders-body .saved-links");
+		fillSavedLinksCombo(teamFoldersCombo, folders);
+
+		//fill team folders settings panel form
+		fillSettingsPanel("myTeamFolders", folders);
+
 		//select the last option in the combobox and display site
 		teamFoldersCombo.selectedIndex = (folders.length - 1);
 		displaySavedSite("my-team-folders-body", teamFoldersCombo.value);
