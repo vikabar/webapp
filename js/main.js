@@ -19,6 +19,8 @@ window.onload = function()
 		if (isHidden)
 		{
 			panel.classList.remove("hidden");
+			//focus the first input
+			UTILS.qs("#rep_01_name").focus();
 		}
 		else
 		{
@@ -37,6 +39,8 @@ window.onload = function()
 		if (isHidden)
 		{
 			panel.classList.remove("hidden");
+			//focus the first input
+			UTILS.qs("#fol_01_name").focus();
 		}
 		else
 		{
@@ -126,6 +130,25 @@ function keyListener(ev)
 	{
 		//hide panel
 		UTILS.qs("#quick-reports-body .settings-panel").classList.add("hidden");
+	}
+	else if ((key == 27) && (UTILS.qs("#my-team-folders-body .settings-panel #" + event.target.id)))
+	{
+		//hide panel
+		UTILS.qs("#my-team-folders-body .settings-panel").classList.add("hidden");
+	}
+	else if ((key == 13) && (UTILS.qs("#quick-reports-body .settings-panel #" + event.target.id)))
+	{
+		event.target.blur();
+		
+		//save links
+		saveLinks("quick-reports-body");
+	}
+	else if ((key == 13) && (UTILS.qs("#my-team-folders-body .settings-panel #" + event.target.id)))
+	{
+		event.target.blur();
+
+		//save links
+		saveLinks("my-team-folders-body");
 	}
 	else
 	{
@@ -238,10 +261,21 @@ function saveLinks(tabBodyName)
 			fillSavedLinksCombo(combo, folders);
 		}
 
-		//select the last option in the combobox
-		combo.selectedIndex = (numOfEntries - 1); 
-		combo.onchange();
-		
+		if (numOfEntries)
+		{
+			//select the last option in the combobox
+			combo.selectedIndex = (numOfEntries - 1); 
+			combo.onchange();
+			combo.classList.remove("hidden");
+			UTILS.qs("#" + tabBodyName + " iframe").classList.remove("hidden");
+		}
+		else
+		{
+			//if there are no saved links - hide the combo and the iframe
+			combo.classList.add("hidden");
+			UTILS.qs("#" + tabBodyName + " iframe").classList.add("hidden");
+		}
+
 		return false;
 	}
 }
