@@ -72,6 +72,23 @@ window.onload = function()
 		return false;
 	}
 
+	var searchField = UTILS.qs("#searchField");
+	searchField.onkeydown = function(ev)
+	{
+		var key = ev.keyCode;
+		if (key == 13)
+		{
+			ev.preventDefault();
+			search();
+			searchField.value = "";
+		}
+	}
+
+	UTILS.qs(".search-box").onsubmit = function(ev)
+	{
+		ev.preventDefault();
+	}
+
 	//define required dependencies between pairs of form inputs
 	var inputs = UTILS.qsa(".settings-panel input");
 	for (var i = 0; i < inputs.length; i++)
@@ -126,26 +143,26 @@ function keyListener(ev)
 	var currTab = tabsNames.indexOf(document.location.hash.substring(1));
 
 	//ESC is pressed inside the panel of quick reports
-	if ((key == 27) && (UTILS.qs("#quick-reports-body .settings-panel #" + event.target.id)))
+	if ((key == 27) && (UTILS.qs("#quick-reports-body .settings-panel #" + ev.target.id)))
 	{
 		//hide panel
 		UTILS.qs("#quick-reports-body .settings-panel").classList.add("hidden");
 	}
-	else if ((key == 27) && (UTILS.qs("#my-team-folders-body .settings-panel #" + event.target.id)))
+	else if ((key == 27) && (UTILS.qs("#my-team-folders-body .settings-panel #" + ev.target.id)))
 	{
 		//hide panel
 		UTILS.qs("#my-team-folders-body .settings-panel").classList.add("hidden");
 	}
-	else if ((key == 13) && (UTILS.qs("#quick-reports-body .settings-panel #" + event.target.id)))
+	else if ((key == 13) && (UTILS.qs("#quick-reports-body .settings-panel #" + ev.target.id)))
 	{
-		event.target.blur();
+		ev.target.blur();
 		
 		//save links
 		saveLinks("quick-reports-body");
 	}
-	else if ((key == 13) && (UTILS.qs("#my-team-folders-body .settings-panel #" + event.target.id)))
+	else if ((key == 13) && (UTILS.qs("#my-team-folders-body .settings-panel #" + ev.target.id)))
 	{
-		event.target.blur();
+		ev.target.blur();
 
 		//save links
 		saveLinks("my-team-folders-body");
@@ -479,6 +496,48 @@ function readLocalSt()
 function isUrlValid(url) 
 {
     return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+}
+
+function search()
+{
+	var found = false;
+	var searchStr = UTILS.qs("#searchField").value.toLowerCase();
+
+	for(var i = 0; (!found) && (i < reports.length); i++)
+	{
+		var findInd = reports[i].text.toLowerCase().indexOf(searchStr);
+		if (findInd != -1)
+		{
+			found = true;
+			document.location.hash = "#quick-reports";
+
+			var combo = UTILS.qs("#quick-reports-body .saved-links");
+			combo.selectedIndex = i; 
+			combo.onchange();
+		}
+	}
+
+	for(var i = 0; (!found) && (i < folders.length); i++)
+	{
+		var findInd = folders[i].text.toLowerCase().indexOf(searchStr);
+		if (findInd != -1)
+		{
+			found = true;
+			document.location.hash = "#my-team-folders";
+
+			var combo = UTILS.qs("#my-folders-body .saved-links");
+			combo.selectedIndex = i; 
+			combo.onchange();
+		}
+	}
+
+	if (!found)
+	{
+		var notif = UTILS.qs(".notifications");
+
+		notif.innerHTML = "The searched report '" + searchStr + "' was not found.";
+		notif.classList.remove("hidden");
+	}
 }
 
 
