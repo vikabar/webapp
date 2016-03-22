@@ -384,6 +384,13 @@ nav
     border: 1px black solid;
 }
 
+.expand-arrow-link
+{
+    line-height: 0;
+    font-size: 0;
+    color: transparent;
+}
+
 .settings-toggle:hover, .expand-arrow:hover
 {
     background-color: white;

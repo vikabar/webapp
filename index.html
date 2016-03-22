@@ -21,8 +21,8 @@
 			<div class="layout-wrap">
 				<a href="#quick-reports"><img src="img/logo-netcraft.svg" alt="netcraft"></a>
 				<form class="search-box">
+					<label for="searchField" class="hidden">Search</label>
 					<input id="searchField" type="search" name="q" placeholder="search">
-					<!-- <button id="searchGo" hidden>Go</button> -->
 				</form>
 			</div>
 		</header>
@@ -90,10 +90,12 @@
 			</ul>
 
 			<div id="quick-reports-body">
-				<select class="saved-links hidden">
+				<label for="rep-saved-links" class="hidden">Saved Links</label>
+				<select id="rep-saved-links" class="saved-links hidden">
 				</select>
 				<span class="settings-toggle"></span>
-				<a href="" target="_blank">
+				<a href="" target="_blank" class="expand-arrow-link">
+					Expand Link
 					<span class="expand-arrow"></span>
 				</a>
 				<div class="settings-panel">
@@ -129,17 +131,20 @@
 			</div>
 
 			<div id="my-folders-body" class="hidden">
-				<a class="right-icon" href="http://www.paulirish.com" target="_blank">
+				<a class="right-icon expand-arrow-link" href="http://www.paulirish.com" target="_blank">
+					Expand Link
 					<span class="expand-arrow"></span>
 				</a>
 				<iframe src="http://www.paulirish.com"></iframe>
 			</div>
 
 			<div id="my-team-folders-body" class="hidden">
-				<select class="saved-links hidden">
+				<label for="fol-saved-links" class="hidden">Saved Links</label>
+				<select id="fol-saved-links" class="saved-links hidden">
 				</select>
 				<span class="settings-toggle"></span>
-				<a href="" target="_blank">
+				<a href="" target="_blank" class="expand-arrow-link">
+					Expand Link
 					<span class="expand-arrow"></span>
 				</a>
 				<div class="settings-panel">
@@ -175,7 +180,8 @@
 			</div>
 
 			<div id="public-folders-body" class="hidden">
-				<a class="right-icon" href="http://addyosmani.com" target="_blank">
+				<a class="right-icon expand-arrow-link" href="http://addyosmani.com" target="_blank">
+					Expand Link
 					<span class="expand-arrow"></span>
 				</a>
 				<iframe src="http://addyosmani.com"></iframe>
