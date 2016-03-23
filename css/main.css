@@ -360,10 +360,15 @@ nav
     background-color: rgb(230, 230, 230);
 }
 
-.right-icon
+.right-icon, .right-icon > span
 {
     position: relative;
     margin-right: 2.5%;
+}
+
+.left-icon, .left-icon > span
+{
+    margin-right: 5px;
 }
 
 .settings-toggle
@@ -372,7 +377,6 @@ nav
     cursor: pointer;
     float: right;
     padding: 4px;
-    border: 1px black solid;
 }
 
 .expand-arrow
@@ -381,7 +385,6 @@ nav
     cursor: pointer;
     float: right;
     padding: 8px;
-    border: 1px black solid;
 }
 
 .expand-arrow-link
@@ -398,7 +401,11 @@ nav
 
 .saved-links
 {
+    position: relative;
     float: left;
+    left: 2.5%;
+    bottom: 2px;
+    padding-left: 5px;
     width: 170px;
     line-height: 40px;
     font-size: 20px;
@@ -414,7 +421,6 @@ nav
     margin-left: auto;
 }
 
-
 .settings-panel
 {
     position: absolute;
@@ -422,7 +428,9 @@ nav
     z-index: 3;
     background-color: white;
     margin-left: 3.5%;
-    margin-top: 30px;
+    margin-top: 10px;
+    border: solid rgb(150, 150, 150) 1px;
+    border-radius: 3px;
 }
 
 .settings-panel fieldset
@@ -475,6 +483,18 @@ fieldset .btn
     display: inline-block;
     float: right;
     border-radius: 3px;
+    outline: none;
+}
+
+fieldset .btn:focus
+{
+    outline: none;
+}
+
+fieldset .btn:active
+{
+    outline: none;
+    box-shadow: inset 0px 3px 3px 0px rgba(80, 80, 80, 0.8);
 }
 
 fieldset button
@@ -485,8 +505,6 @@ fieldset button
 
 .input-error
 {
-    /*background-color: red;
-    color: white;*/
     border: solid red 1px;
 }
 

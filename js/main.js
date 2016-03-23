@@ -1,12 +1,17 @@
 var reports = [];
 var folders = [];
 
+//initialize site
 window.onload = function()
 {
+	//choose first tab
 	document.location.hash = "#quick-reports";
 	UTILS.addEvent(window,"hashchange",selectTab);
+	//read notification from json file
 	readNotificationFromFile();
+	//load saved links and last tab from local storage
 	readLocalSt();
+	//register keyboard navigation
 	document.onkeydown = keyListener;
 
 	//toggle visibility of settins panel when the wheel btn is pressed (quick-reports) 
@@ -48,6 +53,7 @@ window.onload = function()
 		}
 	}
 
+	//register click events
 	UTILS.qs("#rep-cancel").onclick = function()
 	{
 		UTILS.qs("#quick-reports-body .settings-panel").classList.add("hidden");
@@ -72,18 +78,22 @@ window.onload = function()
 		return false;
 	}
 
+	//register search submission event
 	var searchField = UTILS.qs("#searchField");
 	searchField.onkeydown = function(ev)
 	{
 		var key = ev.keyCode;
+		//Check if ENTER was pressed
 		if (key == 13)
 		{
+			//search string and clean field
 			ev.preventDefault();
 			search();
 			searchField.value = "";
 		}
 	}
 
+	//don't submit form
 	UTILS.qs(".search-box").onsubmit = function(ev)
 	{
 		ev.preventDefault();
@@ -129,6 +139,7 @@ window.onload = function()
 }
 
 
+//display a saved link inside the iframe
 function displaySavedSite(tabBodyName, link)
 {
 	UTILS.qs("#" + tabBodyName + " iframe").setAttribute("src", link);
@@ -136,6 +147,7 @@ function displaySavedSite(tabBodyName, link)
 }
 
 
+//Keyboard navigation listener
 function keyListener(ev)
 {
 	var key = ev.keyCode;
@@ -148,11 +160,13 @@ function keyListener(ev)
 		//hide panel
 		UTILS.qs("#quick-reports-body .settings-panel").classList.add("hidden");
 	}
+	//ESC is pressed inside the panel of team folders
 	else if ((key == 27) && (UTILS.qs("#my-team-folders-body .settings-panel #" + ev.target.id)))
 	{
 		//hide panel
 		UTILS.qs("#my-team-folders-body .settings-panel").classList.add("hidden");
 	}
+	//ENTER is pressed inside the panel of quick reports
 	else if ((key == 13) && (UTILS.qs("#quick-reports-body .settings-panel #" + ev.target.id)))
 	{
 		ev.target.blur();
@@ -160,6 +174,7 @@ function keyListener(ev)
 		//save links
 		saveLinks("quick-reports-body");
 	}
+	//ENTER is pressed inside the panel of team folders
 	else if ((key == 13) && (UTILS.qs("#my-team-folders-body .settings-panel #" + ev.target.id)))
 	{
 		ev.target.blur();
@@ -167,19 +182,24 @@ function keyListener(ev)
 		//save links
 		saveLinks("my-team-folders-body");
 	}
+	//arrow key tab navigation
 	else
 	{
+		//check which arrow was pressed and target tab
 		var tabDiff = 38 - key;
 		var newTab = currTab - tabDiff;
 
+		//check tab range limits
 		if ((newTab <= 3) && (newTab >= 0))
 		{
+			//open new tab
 			document.location.hash = "#" + tabsNames[newTab];
 		}
 	}
 }
 
 
+//make all tabs unselected
 function unselectCurrTab() 
 {
 	//make current tab button unactive
@@ -194,6 +214,7 @@ function unselectCurrTab()
 }
 
 
+//make a tab selected and display its body
 function selectTab()
 {
 	//get elements associated with the selected tab
@@ -212,8 +233,10 @@ function selectTab()
 }
 
 
+//save the links form in local storage
 function saveLinks(tabBodyName)
 {
+	//define current tab input names
 	var inputPrefix = (tabBodyName == "quick-reports-body") ? "rep_0" : "fol_0";
 
 	for (var i = 1; i <= 3; i++)
@@ -242,7 +265,7 @@ function saveLinks(tabBodyName)
 		}
 	}
 
-
+	//validate the form
 	if (validateForm(tabBodyName))
 	{
 		//hide panel
@@ -287,6 +310,7 @@ function saveLinks(tabBodyName)
 			}
 		}
 
+		//save data to local storage
 		writeToLocalSt();
 
 		var combo = UTILS.qs("#" + tabBodyName + " .saved-links");
@@ -327,18 +351,21 @@ function saveLinks(tabBodyName)
 }
 
 
+//read the notification from the json file
 function readNotificationFromFile()
 {
 	var doneFunction =  function(res)
 	{
 		if (res.notification)
 		{
+			//display notification
 			var notif = UTILS.qs(".notifications");
 			notif.innerHTML = res.notification;
 			notif.classList.remove("hidden");
 		}
 	};
 
+	//make an ajax request to the file
 	UTILS.ajax("data/config.json", {done: doneFunction});
 }
 
@@ -372,6 +399,7 @@ function validateForm(tab)
 }
 
 
+//fill a combobox with link names
 function fillSavedLinksCombo(combo, values)
 {
 	//put new values into the combobox
@@ -384,15 +412,20 @@ function fillSavedLinksCombo(combo, values)
 	}
 }
 
+
+//fill a settings panel with links names and urls
 function fillSettingsPanel(panelName, values)
 {
+	//define current tab input names
 	var inputPrefix = (panelName == "quickReports") ? "rep_0" : "fol_0";
 
 	for (var i = 0; i < values.length; i++)
 	{
+		//get inputs
 		var nameField = UTILS.qs("#" + inputPrefix + (i+1) + "_name");
 		var urlField = UTILS.qs("#" + inputPrefix + (i+1) + "_URL");
 
+		//grab content
 		nameField.value = values[i].text;
 		urlField.value = values[i].value;
 
@@ -410,17 +443,20 @@ function fillSettingsPanel(panelName, values)
 }
 
 
+//write data to the local storage
 function writeToLocalSt()
 {
 	var reportsStr = JSON.stringify(reports);
 	var foldersStr = JSON.stringify(folders);
 	var lastTab = document.location.hash;
 
+	//concat all links and last tab into one string of data
 	var savedData = reportsStr + "^" + foldersStr + "^" + lastTab;
 	localStorage.setItem("savedData", savedData);
 }
 
 
+//load saved links and last tab from the local storage
 function readLocalSt()
 {
 	//load saved data
@@ -431,6 +467,7 @@ function readLocalSt()
 	}
 	var savedDataSplit = savedData.split("^");
 
+	//make sure all data exists before loading it
 	if (savedDataSplit[0] != "")
 	{
 		reports = JSON.parse(savedDataSplit[0]);
@@ -493,21 +530,28 @@ function readLocalSt()
 	}
 }
 
+
+//validate a url using RegEx
 function isUrlValid(url) 
 {
     return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
 }
 
+
+//look for a string or a part of it among site link names
 function search()
 {
 	var found = false;
 	var searchStr = UTILS.qs("#searchField").value.toLowerCase();
 
+	//look for the string in all quick reports entries
 	for(var i = 0; (!found) && (i < reports.length); i++)
 	{
+		//check substring
 		var findInd = reports[i].text.toLowerCase().indexOf(searchStr);
 		if (findInd != -1)
 		{
+			//found - go to the correct tab and display site
 			found = true;
 			document.location.hash = "#quick-reports";
 
@@ -517,20 +561,24 @@ function search()
 		}
 	}
 
+	//look for the string in all team folders entries
 	for(var i = 0; (!found) && (i < folders.length); i++)
 	{
+		//check substring
 		var findInd = folders[i].text.toLowerCase().indexOf(searchStr);
 		if (findInd != -1)
 		{
+			//found - go to the correct tab and display site
 			found = true;
 			document.location.hash = "#my-team-folders";
 
-			var combo = UTILS.qs("#my-folders-body .saved-links");
+			var combo = UTILS.qs("#my-team-folders-body .saved-links");
 			combo.selectedIndex = i; 
 			combo.onchange();
 		}
 	}
 
+	//display a notification if the string wasn't found at all
 	if (!found)
 	{
 		var notif = UTILS.qs(".notifications");
@@ -539,5 +587,3 @@ function search()
 		notif.classList.remove("hidden");
 	}
 }
-
-
